@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "26a0c82e-2982-4073-a8cb-c603adf975a5",
+		"name": "Customer Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4228934"
+	},
+	"item": [
+		{
+			"name": "Get Customers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/customers",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/customer/1",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customer",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer By Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/customer?firstName=Mugur",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customer"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "Mugur"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Florin\",\n    \"lastName\": \"Mugur\",\n    \"age\": 40,\n    \"homeAddress\": {\n        \"streetName\": \"Aradului\",\n        \"houseNumber\": 1,\n        \"postalCode\": 300088,\n        \"country\": \"Romania\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{customer_service_host}}/customer",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Address",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"homeAddress\": {\n        \"streetName\": \"King's\",\n        \"houseNumber\": 2,\n        \"postalCode\": 400099,\n        \"country\": \"Holland\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{customer_service_host}}/customer",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

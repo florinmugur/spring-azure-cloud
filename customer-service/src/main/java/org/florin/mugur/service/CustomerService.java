@@ -1,6 +1,5 @@
 package org.florin.mugur.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.florin.mugur.exception.CustomerNotFoundException;
 import org.florin.mugur.model.entity.Address;
@@ -8,14 +7,16 @@ import org.florin.mugur.model.entity.Customer;
 import org.florin.mugur.model.repository.AddressRepository;
 import org.florin.mugur.model.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 import static org.springframework.util.StringUtils.hasLength;
 
 @Service
-@Transactional
+@Transactional(propagation = REQUIRES_NEW)
 @RequiredArgsConstructor
 public class CustomerService {
 
