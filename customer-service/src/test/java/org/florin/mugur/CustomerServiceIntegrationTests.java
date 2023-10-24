@@ -58,6 +58,17 @@ class CustomerServiceIntegrationTests {
     }
 
     @Test
+    void testCustomerNotFound() throws Exception {
+        assertEquals(0, customerRepository.findAll().size());
+
+        int customerId = 10;
+
+        mvc.perform(get("/customer/" + customerId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Customer with id " + customerId + " was not found!"));
+    }
+
+    @Test
     void testGetCustomer() throws Exception {
         assertEquals(0, customerRepository.findAll().size());
 
