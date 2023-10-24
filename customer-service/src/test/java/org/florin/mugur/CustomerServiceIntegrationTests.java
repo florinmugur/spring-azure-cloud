@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -153,6 +152,30 @@ class CustomerServiceIntegrationTests {
         assertEquals(5, dbAddress.getHouseNumber());
         assertEquals(5555, dbAddress.getPostalCode());
         assertEquals("Test", dbAddress.getCountry());
+    }
+
+    @Test
+    void testCreateCustomerWithoutAddress() throws Exception {
+        assertEquals(0, customerRepository.findAll().size());
+
+        Customer customer = createCustomer("No", "Address", 8, null, false);
+
+        mvc.perform(post("/customer")
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(customer)))
+                .andExpect(status().isOk());
+
+        List<Customer> customers = customerRepository.findAll();
+        assertEquals(1, customers.size());
+
+        Customer dbCustomer = customers.get(0);
+
+        assertNotNull(dbCustomer);
+        assertEquals("No", dbCustomer.getFirstName());
+        assertEquals("Address", dbCustomer.getLastName());
+        assertEquals(8, dbCustomer.getAge());
+
+        assertNull(dbCustomer.getHomeAddress());
     }
 
     @Test
