@@ -31,9 +31,9 @@ public class SecurityConfiguration {
         AuthenticationFilter authFilter = new AuthenticationFilter(authService);
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .httpBasic(withDefaults())
-                .sessionManagement((session) -> session.sessionCreationPolicy(STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
