@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  customer-service:
+    build: customer-service
+    container_name: customer_service
+    image: florin_mugur/spring-azure-microservices
+    ports:
+      - "8080:8080"
