@@ -4,5 +4,7 @@ services:
     build: customer-service
     container_name: customer_service
     image: florin_mugur/spring-azure-microservices
+    environment:
+      - API_KEY=local_api_key
     ports:
       - "8080:8080"

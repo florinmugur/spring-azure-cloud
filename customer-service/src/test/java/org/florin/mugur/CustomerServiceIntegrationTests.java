@@ -2,6 +2,8 @@ package org.florin.mugur;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import org.florin.mugur.configuration.SecurityConfiguration;
 import org.florin.mugur.model.entity.Address;
 import org.florin.mugur.model.entity.Customer;
 import org.florin.mugur.model.repository.CustomerRepository;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 import java.util.List;
 
+import static org.florin.mugur.configuration.SecurityConfiguration.AUTH_TOKEN_HEADER_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -26,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = CustomerServiceApplication.class)
+        classes = {CustomerServiceApplication.class, SecurityConfiguration.class},
+        properties = {"API_KEY=integration_test"})
 @TestPropertySource(
         locations = "classpath:application-integration.yml")
 class CustomerServiceIntegrationTests {
@@ -38,13 +42,25 @@ class CustomerServiceIntegrationTests {
     private MockMvc mvc;
 
     @Test
+    void testNotAuthenticatedRequest() throws Exception {
+        try {
+            mvc.perform(get("/customers"));
+
+            throw new RuntimeException("Request should not work without security header!");
+        } catch (ServletException ex) {
+            assertEquals("Access Denied", ex.getCause().getMessage());
+        }
+    }
+
+    @Test
     void testGetCustomers() throws Exception {
         assertEquals(0, customerRepository.findAll().size());
 
         Address homeAddress = createAddress("Integration", 1, 123456, "Test");
         createCustomer("Get", "Customers", 23, homeAddress);
 
-        mvc.perform(get("/customers"))
+        mvc.perform(get("/customers")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].firstName", is("Get")))
@@ -62,7 +78,8 @@ class CustomerServiceIntegrationTests {
 
         int customerId = 10;
 
-        mvc.perform(get("/customer/" + customerId))
+        mvc.perform(get("/customer/" + customerId)
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Customer with id " + customerId + " was not found!"));
     }
@@ -74,7 +91,8 @@ class CustomerServiceIntegrationTests {
         Address homeAddress = createAddress("Integration", 2, 654321, "Test");
         Customer customer = createCustomer("Get", "Customer", 2, homeAddress);
 
-        mvc.perform(get("/customer/" + customer.getId()))
+        mvc.perform(get("/customer/" + customer.getId())
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                 .andExpect(jsonPath("firstName", is("Get")))
@@ -94,6 +112,7 @@ class CustomerServiceIntegrationTests {
         createCustomer("Find", "Both", 3, homeAddress);
 
         mvc.perform(get("/customer")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test")
                         .param("firstName", "Find")
                         .param("lastName", "Both"))
                 .andExpect(status().isOk())
@@ -114,6 +133,7 @@ class CustomerServiceIntegrationTests {
         createCustomer("Find", "First", 4, homeAddress);
 
         mvc.perform(get("/customer")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test")
                         .param("firstName", "First"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("firstName", is("Find")))
@@ -133,6 +153,7 @@ class CustomerServiceIntegrationTests {
         Customer customer = createCustomer("Create", "Customer", 5, homeAddress, false);
 
         mvc.perform(post("/customer")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test")
                         .contentType(APPLICATION_JSON)
                         .content(toJson(customer)))
                 .andExpect(status().isOk());
@@ -161,6 +182,7 @@ class CustomerServiceIntegrationTests {
         Customer customer = createCustomer("No", "Address", 8, null, false);
 
         mvc.perform(post("/customer")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test")
                         .contentType(APPLICATION_JSON)
                         .content(toJson(customer)))
                 .andExpect(status().isOk());
@@ -192,6 +214,7 @@ class CustomerServiceIntegrationTests {
         newCustomer.setId(customer.getId());
 
         mvc.perform(put("/customer")
+                        .header(AUTH_TOKEN_HEADER_NAME, "integration_test")
                         .contentType(APPLICATION_JSON)
                         .content(toJson(newCustomer)))
                 .andExpect(status().isOk());
