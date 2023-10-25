@@ -53,6 +53,18 @@ class CustomerServiceIntegrationTests {
     }
 
     @Test
+    void testWrongAuthenticationHeader() throws Exception {
+        try {
+            mvc.perform(get("/customers")
+                    .header(AUTH_TOKEN_HEADER_NAME, "wrong_api_key"));
+
+            throw new RuntimeException("Request should not work without security header!");
+        } catch (ServletException ex) {
+            assertEquals("Access Denied", ex.getCause().getMessage());
+        }
+    }
+
+    @Test
     void testGetCustomers() throws Exception {
         assertEquals(0, customerRepository.findAll().size());
 
