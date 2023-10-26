@@ -24,6 +24,78 @@
 			"response": []
 		},
 		{
+			"name": "Actuator Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/customers",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/actuator/info",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"actuator",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/actuator/metrics",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"actuator",
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator Metric",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{customer_service_host}}/actuator/metrics/system.load.average.1m",
+					"host": [
+						"{{customer_service_host}}"
+					],
+					"path": [
+						"actuator",
+						"metrics",
+						"system.load.average.1m"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Customer",
 			"request": {
 				"method": "GET",
