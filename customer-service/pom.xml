@@ -12,6 +12,7 @@
 
 	<properties>
 		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+		<sonar.coverage.exclusions>**/org/florin/mugur/model/entity/*,**/CustomerServiceApplication*.java,**/ApiKeyAuthentication*.java</sonar.coverage.exclusions>
 		<sonar.exclusions>**/model/entity/*.java</sonar.exclusions>
 	</properties>
 
